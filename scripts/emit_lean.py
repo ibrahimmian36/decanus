@@ -97,6 +97,9 @@ def emit(chain_path: str, x: int, outdir: str, chunk_size: int = 4000,
     # Build the rung theorem: n in (24, X] falls in exactly one chunk
     # interval (C_i, C_j]; apply chain_sound of that chunk.
     lines = [
+        "/-", "Copyright (c) 2026 Millennium Research. All rights reserved.",
+        "Released under Apache 2.0 license as described in the file LICENSE.",
+        "Authors: Millennium Research (Ibby Mian)", "-/",
         imports, "import Erdos647.Chain", "",
         "/-! Generated driver: composes the chunk certificates into the",
         f"rung theorem covering (24, {x}]. Do not edit by hand. -/", "",

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Erdős-7 publication gate (ERDOS7_PLAN.md step 8).
+# Erdős-647 publication gate.
 #
 # Two independent layers, both required:
 #

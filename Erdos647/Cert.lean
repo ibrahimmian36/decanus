@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 Millennium Research. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Millennium Research (Ibby Mian)
+-/
 import Erdos647.Certs.Chunk0000
 import Erdos647.Certs.Chunk0001
 import Erdos647.Certs.Chunk0002
