@@ -14,7 +14,7 @@ The formal-conjectures repository states #647 as
   `theorem erdos_647 : answer(sorry) ↔ ∃ n > 24, ⨆ m : Fin n, m + σ 0 m ≤ n + 2`
 
 (google-deepmind/formal-conjectures, `FormalConjectures/ErdosProblems/647.lean`,
-pinned at commit `c252a41054125b5fd9c8356e2137cd9b55337657`; a verbatim copy of
+pinned at commit `c252a41054125b5fd9c8356e2137cd9b55337657`; a copy of
 that file is kept in `docs/upstream_647_c252a41.lean`). The supremum runs over
 `m ∈ {0, …, n−1}`, i.e. `m < n`, and `σ 0` is the divisor-count function.
 
@@ -31,7 +31,9 @@ open ArithmeticFunction ArithmeticFunction.sigma
 theorem sigma_zero_eq_card_divisors (m : ℕ) : σ 0 m = m.divisors.card := by
   simp [ArithmeticFunction.sigma_zero_apply]
 
-/-- A killed `n` refutes the inner predicate of `erdos_647`, verbatim. -/
+/-- A killed `n` refutes the inner predicate of `erdos_647` (identical to
+the upstream expression up to the `Fin n → ℕ` coercion the elaborator
+inserts either way). -/
 theorem not_sup_le_of_killed {n : ℕ} (hk : Killed n) :
     ¬ (⨆ m : Fin n, ↑m + σ 0 m ≤ n + 2) := by
   obtain ⟨m, hmn, hm0, hkill⟩ := hk

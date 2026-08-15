@@ -1,6 +1,6 @@
 # Decanus
 
-[![Lean Action CI](https://github.com/ibrahimmian36/decanus/actions/workflows/ci.yml/badge.svg)](https://github.com/ibrahimmian36/decanus/actions/workflows/ci.yml)
+[![axiom gate](https://github.com/ibrahimmian36/decanus/actions/workflows/ci.yml/badge.svg)](https://github.com/ibrahimmian36/decanus/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![axioms](https://img.shields.io/badge/axioms-propext%20%7C%20Classical.choice%20%7C%20Quot.sound-success)](#the-certified-results)
 
@@ -24,11 +24,12 @@ end to end by a proof kernel.
 Both compile in Lean 4.30.0 / mathlib v4.30.0 with axioms exactly
 `{propext, Classical.choice, Quot.sound}`: no `sorry`, no `native_decide`,
 no extra axioms, enforced by a two-layer gate (`scripts/axiom_gate.sh`, run
-in CI on every push). The inner predicate is carried verbatim from
+in CI on every push). The inner predicate is carried from
 google-deepmind/formal-conjectures (`FormalConjectures/ErdosProblems/647.lean`,
-commit `c252a41`, pinned; a verbatim copy of the upstream file is kept in
-`docs/upstream_647_c252a41.lean`), so the theorems speak the upstream
-statement's exact vocabulary.
+commit `c252a41`, pinned; a copy of the upstream file is kept in
+`docs/upstream_647_c252a41.lean`), identical up to one coercion the
+elaborator inserts either way, so the theorems speak the upstream
+statement's vocabulary.
 
 ## Two tiers, stated plainly
 
@@ -105,6 +106,21 @@ confirms the solution set below 10^7 is exactly {2, 3, 4, 5, 6, 8, 10,
 12, 24} (OEIS [A087280](https://oeis.org/A087280) plus the trivial small
 cases), and spot-checks n + τ(n) against OEIS
 [A062249](https://oeis.org/A062249).
+
+## Layout
+
+    Erdos647/Defs.lean       witness format and Bool checkers
+    Erdos647/TauLower.lean   soundness: certified divisor-count lower bounds
+    Erdos647/Chain.lean      soundness: chain coverage
+    Erdos647/Bridge.lean     bridge to the pinned upstream statement
+    Erdos647/Certs/          generated chunks, rung (24, 1e7]
+    Erdos647/Certs8/         generated chunks, rung (24, 1e8]
+    Erdos647/Cert*.lean      generated drivers composing the chunks
+    Erdos647/Headline.lean   the two theorems above
+    Erdos647/AxiomCheck.lean curated #print axioms manifest
+    Erdos647/AxiomAudit.lean mechanical whole-library axiom audit
+    scripts/                 generator, verifier, cross-check, gate
+    docs/                    pinned upstream copy, drafts
 
 ## Context and credit
 

@@ -11,7 +11,7 @@ import Erdos647.Bridge
 # The headline theorem (Erdős #647)
 
 The certified rung: no `n` in `(24, X]` satisfies the #647 condition, with
-the inner predicate written exactly as in the formal-conjectures statement
+the inner predicate matching the formal-conjectures statement
 (pinned at commit `c252a41054125b5fd9c8356e2137cd9b55337657`). `X` here is
 the bound reached by the generated chain in `Cert.lean`.
 -/

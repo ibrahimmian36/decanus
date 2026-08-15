@@ -24,8 +24,9 @@ with certified bound `t` kills every `n ∈ [m+1, m+t-3]`, because for such
 Everything in this file is a `Bool` computation designed to be evaluated by
 the kernel: structural recursion only, no `Nat.sqrt`, no well-founded
 recursion, no `Finset`. The soundness lemmas live in `TauLower.lean` and
-`Chain.lean`; the generated certificate chunks in `certs/` are checked by a
-single `decide` per chunk against `chainOk`.
+`Chain.lean`; the generated certificate chunks in `Erdos647/Certs/` and
+`Erdos647/Certs8/` are checked by a single `decide` per chunk against
+`chainOk`.
 -/
 
 namespace Erdos647
