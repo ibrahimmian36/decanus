@@ -11,7 +11,7 @@ export DEBIAN_FRONTEND=noninteractive
 export GIT_TERMINAL_PROMPT=0
 
 COMPILER="${COMPILER:-gcc}"                 # gcc | clang
-WALL_CAP="${WALL_CAP:-36000}"               # 10h hard cap (64 vCPU sizing)
+WALL_CAP="${WALL_CAP:-57600}"               # 16h hard cap (32 vCPU sizing)
 SMOKE="${SMOKE:-0}"                          # SMOKE=1: cheap preflight only
 DECANUS_COMMIT=adf6670aac5fbbed89440c09d5ed9e008ed8a54b
 MATHLIB_REV=c5ea00351c28e24afc9f0f84379aa41082b1188f
@@ -49,10 +49,10 @@ export PATH="$HOME/.elan/bin:$PATH"
 note "STAGE0 PASS deps"
 
 # Jobs bounded by RAM. Decanus certificate chunks elaborate at ~3.8GB peak
-# (heavier than mathlib's ~2.5GB), so the chunk stage uses RAM/4.
+# (heavier than mathlib's ~2.5GB), so the chunk stage uses RAM/5.
 CORES=$(nproc)
 RAM_GB=$(awk '/MemTotal/{printf "%d", $2/1048576}' /proc/meminfo)
-CHUNK_JOBS=$(( RAM_GB / 4 < CORES ? RAM_GB / 4 : CORES )); [ "$CHUNK_JOBS" -lt 2 ] && CHUNK_JOBS=2
+CHUNK_JOBS=$(( RAM_GB / 5 < CORES ? RAM_GB / 5 : CORES )); [ "$CHUNK_JOBS" -lt 2 ] && CHUNK_JOBS=2
 note "cores=$CORES ram=${RAM_GB}GB chunk_jobs=$CHUNK_JOBS"
 
 # ---------- SMOKE mode: preflight everything cheap, then exit ----------
