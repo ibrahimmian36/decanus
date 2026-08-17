@@ -1,0 +1,435 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.2in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tdiv}{\tau}
+\newcommand{\Nat}{\mathbb{N}}
+
+\title{A kernel-checked exclusion certificate for Erd\H{o}s problem 647}
+
+\author{Ibby Mian}
+\author{Shayaan Siddique}
+\address{Millennium Research}
+\email{ibrahimnmian@gmail.com}
+
+\date{August 2026}
+
+\begin{document}
+
+\begin{abstract}
+Erd\H{o}s problem 647 asks whether any $n > 24$ satisfies
+$\max_{m<n}(m + \tdiv(m)) \le n + 2$, where $\tdiv$ is the divisor-count
+function. Computational searches have excluded solutions up to $10^{12}$
+by direct sieve (Id\'en) and up to roughly $9.17 \times 10^{18}$ within a
+modular reduction whose Lean component relies on \texttt{native\_decide}
+(Hughes, extended by bentrd). Those computations sit outside any proof
+kernel. We give the first exclusion checked end to end by one: no solution
+exists with $24 < n \le 10^8$, proved in Lean~4 with axiom closure exactly
+$\{\mathtt{propext}, \mathtt{Classical.choice}, \mathtt{Quot.sound}\}$.
+The proof replays a chain of $891{,}554$ factorization witnesses whose
+excluded intervals concatenate across $(24, 10^8]$; it needs no primality
+facts beyond primes below $1024$, and it is the finite, fully proved form
+of a domination-interval argument whose asymptotic step was the identified
+gap in a withdrawn January 2026 claim on this problem. Our range is four
+to eleven orders of magnitude below the computational frontiers we cite; the
+contribution is the trust base, not the range.
+\end{abstract}
+
+\maketitle
+
+\section{The problem and its status}
+
+Let $\tdiv(m)$ denote the number of divisors of $m$. Problem 647 in
+Bloom's database of Erd\H{o}s problems \cite{bloom647}, due to Erd\H{o}s
+and Selfridge, asks:
+\begin{quote}
+Is there some $n > 24$ such that
+$\max_{m<n}\,(m + \tdiv(m)) \le n + 2$?
+\end{quote}
+The condition holds at $n = 24$, and the threshold $n+2$ is best possible,
+since $\max(\tdiv(n-1)+n-1,\ \tdiv(n-2)+n-2) \ge n+2$ for every $n$.
+Erd\H{o}s considered it ``extremely doubtful'' that infinitely many such
+$n$ exist and suggested that $\max_{m<n}(\tdiv(m)+m-n) \to \infty$
+\cite{erdos79}, while expecting the windowed variant
+($\max_{n-k<m<n}$ for fixed $k$) to have infinitely many solutions for
+every $k$; in 1992 he offered \pounds 25 for a single example beyond
+$24$. The problem page records the further original references and
+Tao's observation that the problem is comparable to the first part of
+problem 679 and much stronger than problems 413 and 248
+\cite{bloom647}. Guy's account of the neighboring questions is
+\cite[B8]{guy}. The known solutions of the associated equality,
+OEIS A087280, are $5, 8, 10, 12, 24$ \cite{oeisA087280}.
+
+The interval $(24, X]$ contains no solution for increasingly large $X$
+by computation. McCranie's bound $X = 10^{10}$ stood in OEIS A087280
+until June 2026, when Id\'en ran a segmented multiplicative sieve over
+all $n \le 10^{12}$, tracking the running maximum
+$R(n) = \max_{m<n}(m + \tdiv(m))$, and found no solution in
+$(24, 10^{12}]$; the minimum observed gap $R(n) - n$ was $224$, near
+$n = 10^{11}$ \cite{iden}. In parallel, a sequence of structural results
+accumulated in the problem's public discussion thread. Dutta showed that
+any solution $n > 84$ satisfies $2520 \mid n$ and, writing $n = 2520N$,
+extracted primality constraints from the divisor bound at small shifts;
+Alexeev refined the $2$-adic bookkeeping, upgraded $2520N - 1$ to a
+prime, and exhibited the near-solution $n = 604{,}517{,}614{,}941{,}240$,
+which satisfies the divisor bound at every shift $k \le 13$ and at
+$k = 24$. Kitamura added that $(n-3)/3$ must be prime. Hughes organized
+these into a sieve modulo $11 \cdot 13 \cdot 17 \cdot 19 = 46189$ leaving
+$41$ open residue classes, showed every solution beyond $24$ lies in one
+of two admissible prime $7$-tuple families, and derived the unconditional
+bound $|\mathcal{C}(x)| \ll x/(\log x)^7$ for the count of candidates up
+to $x$ by Brun's sieve \cite{hughesrepo}. Hughes also published a
+\emph{frontier certificate}: no solution with
+$24 < n \le 2520 \cdot 46189 \cdot 529 \cdot 10^7 \approx 6.16 \times
+10^{17}$, obtained by closing $6{,}549$ refined sub-progressions with
+fixed congruences and searching the remaining $15{,}140$ to depth
+$u = 10^7$; bentrd later extended the search leg to
+$u = 1.49 \times 10^8$, i.e.\ to $n \le 9.17 \times 10^{18}$
+\cite{bentrd}. The Lean component of Hughes's development is explicit
+that its finite computations are discharged by \texttt{native\_decide}
+and that one problem-specific axiom carries the open residue classes
+\cite{hughesrepo}.
+
+One further episode frames our contribution. In January 2026 a claimed
+full solution appeared \cite{agbanwa}: a \emph{domination} argument in
+which each record-holder of $m \mapsto m + \tdiv(m)$ excludes an explicit
+interval of $n$, together with the assertion that these intervals cover
+all $n > 24$. Tao's public assessment identified the gap precisely: the
+claim that consecutive domination intervals overlap forever is unproven
+and likely false, and the accompanying Lean formalization treats the
+asymptotic case as an axiom, so it certifies nothing \cite{bloom647}.
+The finite form of the same idea, however, is exactly what a proof
+kernel can settle: over a bounded range, whether the intervals cover is
+a checkable fact.
+
+This note reports that check, carried out at scale under a strict trust
+discipline. Our result is:
+
+\begin{theorem}\label{thm:main}
+No $n$ with $24 < n \le 10^8$ satisfies
+$\max_{m<n}(m + \tdiv(m)) \le n + 2$.
+\end{theorem}
+
+Theorem~\ref{thm:main} is proved in Lean~4 \cite{lean4} against
+mathlib \cite{mathlib}, in the repository \texttt{decanus}
+\cite{decanus}. The axiom closure of the final theorem, reported by
+\verb|#print axioms| and enforced in continuous integration by a
+two-layer gate, is exactly the three standard axioms
+$\{\mathtt{propext}, \mathtt{Classical.choice}, \mathtt{Quot.sound}\}$:
+no \texttt{sorry}, no \texttt{native\_decide}, no problem-specific
+axiom, no external solver or compiled evaluator in the trusted base.
+The statement is formulated against the inner predicate of the
+\texttt{formal-conjectures} formalization of the problem
+\cite{formalconjectures}, pinned at a fixed commit, so the theorem
+speaks the same vocabulary as the public formal statement. A companion
+theorem certifies the subrange $(24, 10^7]$ separately.
+
+We state the position of this result plainly, in the same spirit as our
+earlier certifications of Erd\H{o}s problems 7, 364, and 486. It is not
+a computational record: Id\'en's $10^{12}$ and the
+Hughes--bentrd frontier at $9.17 \times 10^{18}$ are far larger, and we
+cite them as the state of the search. What the present work adds is a
+range on which nothing needs to be trusted beyond the Lean kernel and
+its three standard axioms --- not contributor code, not a compiler, not
+a cache, not a run of a sieve on one machine. Section~\ref{sec:cert}
+describes the certificate, Section~\ref{sec:lean} the Lean development,
+Section~\ref{sec:validation} the generation pipeline and its
+cross-validation, and Section~\ref{sec:limits} the method's ceiling and
+its relation to the structural program.
+
+\section{The certificate}\label{sec:cert}
+
+Call $m$ a \emph{kill witness} for $n$ if $m < n$ and
+$m + \tdiv(m) \ge n + 3$; one such witness refutes the defining
+inequality at $n$. A single $m$ serves every
+$n \in [m+1,\, m + \tdiv(m) - 3]$, so a finite set of witnesses whose
+intervals concatenate without gaps excludes an entire range. The
+certificate for Theorem~\ref{thm:main} is such a chain: witnesses
+$m_1, m_2, \ldots$ with associated certified bounds $t_i \le \tdiv(m_i)$,
+each interval $[m_i + 1,\, m_i + t_i - 3]$ beginning no later than the
+previous one ends, jointly covering $(24, 10^8]$.
+
+Two design choices make the chain cheap for a kernel to check.
+
+\emph{Lower bounds only, from maximal smooth parts.} A witness never
+needs its full factorization certified; it needs a lower bound on
+$\tdiv(m)$. Each witness stores the maximal power of every prime
+$p < 1024$ dividing $m$. The checker re-multiplies the stored powers,
+verifies that their product divides $m$ and that each listed power is
+maximal (i.e.\ $p^{e+1} \nmid m$), and reads off
+$\prod_i (e_i + 1) \le \tdiv(m)$, since the stored prime powers are
+pairwise coprime. Maximality buys one further factor: whatever cofactor
+of $m$ remains above the smooth part is then coprime to it, so if the
+cofactor exceeds $1$ it contributes at least the two divisors $1$ and
+itself, and the certified bound doubles. Primality of a listed $p < 1024$
+is settled by eleven trial divisions (by the primes up to $31$, since
+$32^2 = 1024$), so no primality certificate for a large prime appears
+anywhere in the development.
+
+\emph{Greedy chaining.} Given the certified bound function, the shortest
+chain is produced greedily: from cover position $C$ (initially $24$),
+take a witness $m \le C$ maximizing $m + t(m)$ and advance to
+$m + t(m) - 3$. Greedy choice is optimal for interval covering, and the
+resulting chain is the iteration of the running-maximum function
+familiar from the sieve computations. Measured chain lengths are
+$495$ to cover $(24, 10^4]$, $2{,}829$ to $10^5$, $17{,}941$ to $10^6$,
+$123{,}323$ to $10^7$, and $891{,}554$ to $10^8$ --- growth by a factor
+of roughly $6.5$--$7$ per decade, reflecting the slow growth of typical
+divisor sums. With the cofactor doubling in place the certified chain
+for $(24, 10^7]$ has exactly the length of the chain computed from the
+true divisor function, an equality we verified directly: the greedy
+steps are dominated by record-setters of the form
+(smooth part) $\times$ (single large prime), for which the doubled
+smooth bound equals $\tdiv$ exactly.
+
+The doubling rule was forced by data, and the episode is worth
+recording. A first design certified only the smooth part's
+$\prod (e_i + 1)$. The generator, which is required to fail loudly if
+the chain ever stalls, stopped at cover position $69{,}030{,}671$: the
+best available witness was
+$m = 69{,}030{,}650 = 2 \cdot 5^2 \cdot 13 \cdot 61 \cdot 1741$, whose
+true divisor count $48$ is halved to $24$ by the prime $1741 > 1024$,
+and at this gap minimum the halved bound advanced the cover by zero.
+Requiring maximality of the stored powers, which makes the cofactor
+coprime for free, recovered the factor of two and unstuck the chain.
+Deep gap minima are precisely where solutions would live, so it is not
+an accident that this is where a weakened bound first failed.
+
+\section{The Lean development}\label{sec:lean}
+
+The development separates a small trusted-once soundness layer from
+bulk data that the kernel evaluates.
+
+The data layer encodes a witness as an offset from the current cover
+position together with its list of prime-power pairs, most significant
+prime first. A Boolean checker \texttt{chainOk} folds down the witness
+list: for each witness it verifies the offset is admissible, the listed
+primes are strictly decreasing and pass the eleven-division primality
+test, the smooth product divides $m$, and each stored power is maximal
+in $m$; it then advances the cover by the certified bound and finally
+demands the target is reached. All recursion is structural, with no
+\texttt{Nat.sqrt}, no well-founded recursion, and no \texttt{Finset}
+computation in the evaluated path, so kernel reduction is
+GMP-arithmetic on literals plus list traversal.
+
+The soundness layer proves, once and abstractly, that a passing check
+means what it should: that the primality test below $1024$ is sound
+(via the bound $\mathrm{minFac}(p)^2 \le p$ for composite $p$); that
+the divisor count of the smooth part is exactly $\prod (e_i+1)$
+(multiplicativity over the pairwise-coprime stored powers); that
+maximality forces the cofactor coprime, giving the doubling; that
+divisor counts are monotone under divisibility; and that a successful
+\texttt{chainOk} run yields, for every $n$ in the covered interval, a
+witness $m < n$ with $n + 3 \le m + \tdiv(m)$. A bridge lemma converts
+that witness into the negation of the formalized inequality
+$\bigl(\sup_{m : \mathrm{Fin}\, n}\, m + \sigma_0\, m\bigr) \le n + 2$,
+the inner predicate of the \texttt{formal-conjectures} statement of the
+problem, which the repository pins at a fixed upstream commit and
+carries verbatim up to one coercion the elaborator inserts in both
+formulations \cite{formalconjectures}.
+
+The certificate data is generated into $254$ chunk files ($31$ for the
+$10^7$ rung, $223$ for the $10^8$ rung, about $42$~MB of Lean source in
+total), each containing one witness-list literal and one theorem proved
+by a single \texttt{decide}: that \texttt{chainOk}, started at that
+chunk's opening cover position, reaches its closing one. Elaborating a
+chunk takes roughly $40$ seconds, most of it the kernel's own replay of
+the evaluation. Generated driver files compose the chunk theorems into
+the rung theorems; the composition is forced by the typechecker, since
+each chunk's closing position is the next chunk's literal opening
+position, and a gap cannot elaborate.
+
+Trust is enforced mechanically. A curated manifest lists the published
+theorems and prints their axiom closures; independently, an audit file
+walks every theorem of every module of the development in the compiled
+environment --- $579$ of them --- recomputes each axiom closure, and
+fails to compile if anything exceeds the three standard axioms, if any
+\texttt{sorry} survives, or if any native-code axiom appears.
+Continuous integration runs both layers on every push. The two-rung
+build compiles in Lean 4.30.0 against mathlib v4.30.0 in about three
+CPU-hours.
+
+\section{Generation and cross-validation}\label{sec:validation}
+
+The chain is found by a segmented sieve over certified divisor bounds:
+an array pass accumulates $\prod (e_i+1)$ over prime powers below
+$1024$ and, in the same pass, the smooth part itself, marking entries
+whose smooth part falls short of the number --- exactly the entries
+whose certified bound doubles. A greedy walk over the running maximum
+emits the witness ledger in an append-only JSONL file whose header and
+footer record the exact covered interval. Generation of the $10^8$
+chain takes about a minute.
+
+Because the generator is the one component a kernel cannot vouch for,
+it is not trusted. A second implementation, sharing no code with the
+first --- pure Python, trial division throughout --- replays the ledger
+witness by witness: primality of every listed prime, strict ordering,
+divisibility, maximality of every power, the doubling condition,
+strictly increasing cover, and the final bound. A third implementation
+recomputes the divisor function by an independent sieve and confirms
+that the solution set below $10^7$ is exactly
+$\{2,3,4,5,6,8,10,12,24\}$, in agreement with OEIS A087280 and its
+conventions, and that $n + \tdiv(n)$ matches OEIS A062249 on the
+recorded values \cite{oeisA062249}. Regeneration is deterministic:
+re-running the pipeline reproduces the committed chunk files byte for
+byte, a property checked by diff in our verification runs. In the other
+direction, any dishonesty in the scripts is caught downstream, since
+the kernel replays every witness from scratch; the scripts affect
+completeness of the search for a chain, never soundness of the theorem.
+
+Beyond the kernel replay that every build performs, we re-checked the
+compiled development with the standalone checker
+\texttt{lean4checker} \cite{lean4checker}, which re-typechecks the
+compiled environment outside the elaborator.
+% TO FILL BEFORE SUBMISSION: lean4checker verdict line
+% (replay of all 262 modules of the development on the build machine).
+A from-source verification leg on separate x86 hardware --- Lean
+toolchain compiled from source, mathlib and the development rebuilt
+with no cache, certificates regenerated and diffed against the
+committed files, gate re-run, environment re-checked ---
+% TO FILL BEFORE SUBMISSION: pod leg results and olean digest comparison.
+follows the protocol of our Erd\H{o}s 486 audit.
+
+\section{Limits and prospects}\label{sec:limits}
+
+The method's ceiling is set by certificate size and kernel time, not by
+mathematics. Chain length grows by a factor of about $6.5$--$7$ per
+decade of range; at $10^9$ the certificate would run to roughly
+$6$ million witnesses and $260$~MB of source, past what a repository
+should carry, and at $10^{12}$ --- the sieve frontier --- to around
+$2 \times 10^9$ witnesses, out of reach for this representation.
+Meaningful extension of kernel-checked range therefore runs through
+structure rather than length: certifying Hughes's modular reduction
+under the same axiom discipline would replace per-$n$ witnesses by
+per-residue-class arguments, and the frontier search cells themselves
+have exactly the shape of our witnesses. The two artifacts are
+complementary today --- his reach with a mixed trust base, our trust
+base on a short range --- and composing them is the natural next step,
+though replacing \texttt{native\_decide} throughout a development of
+that size is a project in its own right.
+
+On the question itself the present work is silent beyond $10^8$, and
+honesty requires repeating what the heuristics say: any solution, if
+one exists at all, lies beyond the current $9.17 \times 10^{18}$
+frontier, in ranges where the prime-tuple constraints price its
+existence very low. The value of a certificate here is not the hunt but
+the floor it establishes --- and the demonstration, on a problem where
+one incorrect proof has already circulated, that the finite part of a
+domination argument can be settled by a kernel rather than asserted.
+
+\section{Precise claims}\label{sec:claims}
+
+Certified, in Lean 4.30.0 / mathlib v4.30.0, axiom closure exactly
+$\{\mathtt{propext}, \mathtt{Classical.choice}, \mathtt{Quot.sound}\}$,
+enforced in CI \cite{decanus}:
+no $n$ with $24 < n \le 10^7$, and no $n$ with $24 < n \le 10^8$,
+satisfies the problem's inequality, stated against the pinned
+\texttt{formal-conjectures} predicate.
+
+Cited, computational, outside any kernel: no solution in
+$(24, 10^{12}]$ (Id\'en \cite{iden}); no solution in $(24,\,
+6.16 \times 10^{17}]$, extended to $(24,\, 9.17 \times 10^{18}]$,
+within the Hughes reduction whose Lean layer uses
+\texttt{native\_decide} plus one problem-specific axiom
+(Hughes \cite{hughesrepo}, bentrd \cite{bentrd}).
+
+We claim nothing else. The structural mathematics of the problem
+belongs to the discussion-thread authors cited above; the search
+frontier belongs to Id\'en, Hughes, and bentrd.
+
+\subsection*{Acknowledgements}
+Claude (Anthropic) was used throughout the development of the Lean
+proofs, the generation pipeline, and this note. Every result is
+kernel-checked, and the pipeline is cross-verified by the independent
+implementations of Section~\ref{sec:validation}.
+
+\begin{thebibliography}{99}
+
+\bibitem{erdos79}
+P.~Erd\H{o}s,
+\emph{Some unconventional problems in number theory},
+Math.\ Mag.\ \textbf{52} (1979), 67--70.
+
+\bibitem{guy}
+R.~K.~Guy,
+\emph{Unsolved Problems in Number Theory},
+3rd ed., Springer, 2004.
+
+\bibitem{bloom647}
+T.~F.~Bloom,
+\emph{Erd\H{o}s Problem \#647},
+\url{https://www.erdosproblems.com/647}, and the associated discussion
+thread, \url{https://www.erdosproblems.com/forum/discuss/647}.
+Accessed 17 August 2026.
+
+\bibitem{oeisA087280}
+OEIS Foundation Inc.,
+\emph{Sequence A087280},
+\url{https://oeis.org/A087280}.
+
+\bibitem{oeisA062249}
+OEIS Foundation Inc.,
+\emph{Sequence A062249},
+\url{https://oeis.org/A062249}.
+
+\bibitem{iden}
+P.~Id\'en,
+\emph{Computational verification of Erd\H{o}s problem 647 up to
+$10^{12}$: gap-growth analysis, depth-record extension to $D=11$, and
+structural analysis}, v3, Zenodo, 2026.
+\url{https://doi.org/10.5281/zenodo.21084248}.
+
+\bibitem{hughesrepo}
+S.~D.~Hughes,
+\emph{erdos647-proof-chain: Lean 4 proof-chain package for Erd\H{o}s
+problem \#647}, with the frontier certificate,
+\url{https://github.com/scottdhughes/erdos647-proof-chain}, 2026.
+
+\bibitem{bentrd}
+bentrd,
+\emph{Erd\H{o}s \#647 frontier extension to $9.174 \times 10^{18}$},
+\url{https://github.com/bentrd/erdos647-frontier-extension}, 2026.
+
+\bibitem{agbanwa}
+J.~Agbanwa,
+\emph{AI assisted (possible) solution to Erd\H{o}s problem 647},
+Zenodo, 2026. \url{https://zenodo.org/records/18390414}.
+See the assessment in the discussion thread of \cite{bloom647}.
+
+\bibitem{formalconjectures}
+Google DeepMind,
+\emph{formal-conjectures},
+\texttt{FormalConjectures/ErdosProblems/647.lean} at commit
+\texttt{c252a410},
+\url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{lean4}
+L.~de~Moura and S.~Ullrich,
+\emph{The Lean 4 theorem prover and programming language},
+CADE 28, Springer, 2021, 625--635.
+
+\bibitem{mathlib}
+The mathlib Community,
+\emph{The Lean mathematical library},
+CPP 2020, ACM, 2020, 367--381.
+
+\bibitem{lean4checker}
+The Lean prover community,
+\emph{lean4checker},
+\url{https://github.com/leanprover/lean4checker}.
+
+\bibitem{decanus}
+I.~Mian and S.~Siddique,
+\emph{Decanus: a kernel-checked exclusion certificate for Erd\H{o}s
+problem 647}, v1.0.0,
+\url{https://github.com/ibrahimmian36/decanus}, 2026.
+
+\end{thebibliography}
+
+\end{document}
