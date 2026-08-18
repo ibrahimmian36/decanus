@@ -1,0 +1,40 @@
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [Erdos647]
+Found 262 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [Mathlib]
+Found 894 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [Batteries]
+Found 74 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [Aesop]
+Found 135 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [Qq]
+Found 14 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [ProofWidgets]
+Found 8 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [Plausible]
+Found 13 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [ImportGraph]
+Found 10 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [Cli]
+Found 3 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [LeanSearchClient]
+Found 4 modules to check

@@ -1,0 +1,46 @@
+[2026-08-18T04:55:16Z] pod_build.sh compiler=gcc cap=57600s host=Linux 6.8.0-110-generic x86_64
+[2026-08-18T04:55:19Z] STAGE0 PASS deps
+[2026-08-18T04:55:19Z] cores=96 ram=1007GB chunk_jobs=64
+[2026-08-18T05:04:44Z] STAGE1 PASS toolchain from source (gcc)
+[2026-08-18T05:21:25Z] STAGE2 PASS full from-source build (mathlib + Erdos647, no cache)
+[2026-08-18T05:21:30Z] STAGE3 PASS regenerate+verify 1e7
+[2026-08-18T05:22:06Z] STAGE3 PASS regenerate+verify 1e8
+[2026-08-18T05:22:19Z] STAGE3 PASS committed certificates regenerate byte-identically
+[2026-08-18T05:22:29Z] STAGE3 PASS cross_check (third implementation, 1e7)
+[2026-08-18T05:22:38Z] STAGE4 PASS axiom gate (AXIOM GATE: PASS (11 published theorems in the manifest, 579 audited library-wide, axioms ⊆ {propext, Classical.choice, Quot.sound}))
+[2026-08-18T05:35:27Z] STAGE5 lean4checker FAIL on Cli
+[2026-08-18T05:35:34Z] STAGE5 FAIL lean4checker (log tail)
+Searching for modules matching: [Batteries]
+Found 74 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [Aesop]
+Found 135 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [Qq]
+Found 14 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [ProofWidgets]
+Found 8 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [Plausible]
+Found 13 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [ImportGraph]
+Found 10 modules to check
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [Cli]
+uncaught exception: Could not find any oleans for: Cli
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+Searching for modules matching: [LeanSearchClient]
+Found 4 modules to check
+[2026-08-18T05:35:34Z] STAGE6 SKIP lean4lean clone failed
+[2026-08-18T05:35:39Z] STAGE7 PASS digests recorded
+[2026-08-18T05:35:39Z] ALL STAGES COMPLETE compiler=gcc
+[2026-08-18T05:35:39Z] packaging results
