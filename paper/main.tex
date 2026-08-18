@@ -131,7 +131,8 @@ speaks the same vocabulary as the public formal statement. A companion
 theorem certifies the subrange $(24, 10^7]$ separately.
 
 We state the position of this result plainly, in the same spirit as our
-earlier certifications of Erd\H{o}s problems 7, 364, and 486. It is not
+earlier certifications of Erd\H{o}s problems 7, 364, and 486
+\cite{mian7,pilus}. It is not
 a computational record: Id\'en's $10^{12}$ and the
 Hughes--bentrd frontier at $9.17 \times 10^{18}$ are far larger, and we
 cite them as the state of the search. What the present work adds is a
@@ -291,7 +292,7 @@ of the development --- the soundness layer, both certificate rungs, and
 the generated drivers --- replay without error; the two axiom-gate
 script files elaborate at gate time and produce no compiled artifact to
 replay.
-Following the protocol of our Erd\H{o}s 486 audit, we then ran two
+Following the protocol of our Erd\H{o}s 486 audit \cite{pilus}, we then ran two
 from-source verification legs on separate x86 hardware, one with the
 Lean toolchain compiled from source by gcc and one by clang. In each
 leg, mathlib and the development were rebuilt with no cache under the
@@ -419,6 +420,18 @@ Google DeepMind,
 \texttt{FormalConjectures/ErdosProblems/647.lean} at commit
 \texttt{c252a410},
 \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{mian7}
+I.~Mian and S.~Siddique,
+\emph{A kernel-checked lower bound for odd covering systems
+(Erd\H{o}s problem 7)},
+arXiv:2607.25628, 2026.
+
+\bibitem{pilus}
+I.~Mian and S.~Siddique,
+\emph{Pilus: a seven-layer verification of the resolution of Erd\H{o}s
+problem 486},
+\url{https://github.com/ibrahimmian36/Pilus}, 2026.
 
 \bibitem{lean4}
 L.~de~Moura and S.~Ullrich,
