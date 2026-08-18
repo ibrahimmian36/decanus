@@ -30,14 +30,14 @@ by direct sieve (Id\'en) and up to roughly $9.17 \times 10^{18}$ within a
 modular reduction whose Lean component relies on \texttt{native\_decide}
 (Hughes, extended by bentrd). Those computations sit outside any proof
 kernel. We give the first exclusion checked end to end by one: no solution
-exists with $24 < n \le 10^8$, proved in Lean~4 with axiom closure exactly
+exists with $24 < n \le 10^9$, proved in Lean~4 with axiom closure exactly
 $\{\mathtt{propext}, \mathtt{Classical.choice}, \mathtt{Quot.sound}\}$.
-The proof replays a chain of $891{,}554$ factorization witnesses whose
-excluded intervals concatenate across $(24, 10^8]$; it needs no primality
+The proof replays a chain of $6{,}685{,}922$ factorization witnesses whose
+excluded intervals concatenate across $(24, 10^9]$; it needs no primality
 facts beyond primes below $1024$, and it is the finite, fully proved form
 of a domination-interval argument whose asymptotic step was the identified
-gap in a withdrawn January 2026 claim on this problem. Our range is four
-to eleven orders of magnitude below the computational frontiers we cite; the
+gap in a withdrawn January 2026 claim on this problem. Our range is three
+to ten orders of magnitude below the computational frontiers we cite; the
 contribution is the trust base, not the range.
 \end{abstract}
 
@@ -112,7 +112,7 @@ This note reports that check, carried out at scale under a strict trust
 discipline. Our result is:
 
 \begin{theorem}\label{thm:main}
-No $n$ with $24 < n \le 10^8$ satisfies
+No $n$ with $24 < n \le 10^9$ satisfies
 $\max_{m<n}(m + \tdiv(m)) \le n + 2$.
 \end{theorem}
 
@@ -127,8 +127,13 @@ axiom, no external solver or compiled evaluator in the trusted base.
 The statement is formulated against the inner predicate of the
 \texttt{formal-conjectures} formalization of the problem
 \cite{formalconjectures}, pinned at a fixed commit, so the theorem
-speaks the same vocabulary as the public formal statement. A companion
-theorem certifies the subrange $(24, 10^7]$ separately.
+speaks the same vocabulary as the public formal statement. Companion
+theorems certify the subranges $(24, 10^7]$ and $(24, 10^8]$ separately;
+those two rungs live in the repository and rebuild in continuous
+integration, while the $10^9$ certificate, at about $260$~MB of source,
+ships as a versioned release artifact (its exact provenance and trust
+status are recorded in the repository and in
+Section~\ref{sec:validation}).
 
 We state the position of this result plainly, in the same spirit as our
 earlier certifications of Erd\H{o}s problems 7, 364, and 486
@@ -136,7 +141,8 @@ earlier certifications of Erd\H{o}s problems 7, 364, and 486
 a computational record: Id\'en's $10^{12}$ and the
 Hughes--bentrd frontier at $9.17 \times 10^{18}$ are far larger, and we
 cite them as the state of the search. What the present work adds is a
-range on which nothing needs to be trusted beyond the Lean kernel and
+range, within a factor of a thousand of the full-sieve frontier, on
+which nothing needs to be trusted beyond the Lean kernel and
 its three standard axioms --- not contributor code, not a compiler, not
 a cache, not a run of a sieve on one machine. Section~\ref{sec:cert}
 describes the certificate, Section~\ref{sec:lean} the Lean development,
@@ -180,9 +186,9 @@ $m + t(m) - 3$. Greedy choice is optimal for interval covering, and the
 resulting chain is the iteration of the running-maximum function
 familiar from the sieve computations. Measured chain lengths are
 $495$ to cover $(24, 10^4]$, $2{,}829$ to $10^5$, $17{,}941$ to $10^6$,
-$123{,}323$ to $10^7$, and $891{,}554$ to $10^8$ --- growth by a factor
-of roughly $6.5$--$7$ per decade, reflecting the slow growth of typical
-divisor sums. With the cofactor doubling in place the certified chain
+$123{,}323$ to $10^7$, $891{,}554$ to $10^8$, and $6{,}685{,}922$ to
+$10^9$ --- growth by a factor of roughly $6.5$--$7$ per decade,
+reflecting the slow growth of typical divisor sums. With the cofactor doubling in place the certified chain
 for $(24, 10^7]$ has exactly the length of the chain computed from the
 true divisor function, an equality we verified directly: the greedy
 steps are dominated by record-setters of the form
@@ -235,11 +241,15 @@ problem, which the repository pins at a fixed upstream commit and
 carries verbatim up to one coercion the elaborator inserts in both
 formulations \cite{formalconjectures}.
 
-The certificate data is generated into $254$ chunk files ($31$ for the
+The certificate data is generated into chunk files ($31$ for the
 $10^7$ rung, $223$ for the $10^8$ rung, about $42$~MB of Lean source in
-total), each containing one witness-list literal and one theorem proved
-by a single \texttt{decide}: that \texttt{chainOk}, started at that
-chunk's opening cover position, reaches its closing one. Elaborating a
+the repository; $1{,}672$ more for the $10^9$ rung, about $260$~MB,
+shipped as a release artifact), each containing one witness-list literal
+and one theorem proved by a single \texttt{decide}: that
+\texttt{chainOk}, started at that chunk's opening cover position,
+reaches its closing one. At $1{,}672$ cases the composed driver exceeds
+the elaborator's default recursion and heartbeat limits, which the
+generated drivers now raise explicitly. Elaborating a
 chunk takes roughly $40$ seconds, most of it the kernel's own replay of
 the evaluation. Generated driver files compose the chunk theorems into
 the rung theorems; the composition is forced by the typechecker, since
@@ -308,13 +318,27 @@ compiled modules of the development agree across all three builds ---
 the ARM build machine and both x86 from-source legs, gcc and clang ---
 so the three toolchains produced bit-identical compiled artifacts.
 
+The $10^9$ rung has a shorter verification history, which we state
+plainly. Its chain was generated and replayed by the independent
+verifier on the x86 host, its $1{,}672$ chunks were built --- hence
+kernel-checked --- once, under the clang from-source toolchain, its
+headline theorem's axiom closure is exactly the three standard axioms
+(a transitive fact: a \texttt{sorry} or native-code axiom anywhere in
+the $1{,}672$ chunks would surface in that closure), and
+\texttt{lean4checker} replayed its driver and headline modules. Unlike
+the two repository rungs it has not been rebuilt on a second machine or
+in continuous integration; the pipeline that produced it is the one
+shown above to reproduce the lower rungs byte for byte across machines
+and compilers.
+
 \section{Limits and prospects}\label{sec:limits}
 
 The method's ceiling is set by certificate size and kernel time, not by
 mathematics. Chain length grows by a factor of about $6.5$--$7$ per
-decade of range; at $10^9$ the certificate would run to roughly
-$6$ million witnesses and $260$~MB of source, past what a repository
-should carry, and at $10^{12}$ --- the sieve frontier --- to around
+decade of range; the $10^9$ certificate already runs to $260$~MB of
+source, carried as a release artifact rather than in the repository; at
+$10^{10}$ the chain would reach roughly $45$ million witnesses and
+$2$~GB, and at $10^{12}$ --- the sieve frontier --- around
 $2 \times 10^9$ witnesses, out of reach for this representation.
 Meaningful extension of kernel-checked range therefore runs through
 structure rather than length: certifying Hughes's modular reduction
@@ -326,7 +350,7 @@ base on a short range --- and composing them is the natural next step,
 though replacing \texttt{native\_decide} throughout a development of
 that size is a project in its own right.
 
-On the question itself the present work is silent beyond $10^8$, and
+On the question itself the present work is silent beyond $10^9$, and
 honesty requires repeating what the heuristics say: any solution, if
 one exists at all, lies beyond the current $9.17 \times 10^{18}$
 frontier, in ranges where the prime-tuple constraints price its
@@ -338,11 +362,13 @@ domination argument can be settled by a kernel rather than asserted.
 \section{Precise claims}\label{sec:claims}
 
 Certified, in Lean 4.30.0 / mathlib v4.30.0, axiom closure exactly
-$\{\mathtt{propext}, \mathtt{Classical.choice}, \mathtt{Quot.sound}\}$,
-enforced in CI \cite{decanus}:
-no $n$ with $24 < n \le 10^7$, and no $n$ with $24 < n \le 10^8$,
+$\{\mathtt{propext}, \mathtt{Classical.choice}, \mathtt{Quot.sound}\}$
+\cite{decanus}: no $n$ with $24 < n \le 10^7$, $10^8$, or $10^9$
 satisfies the problem's inequality, stated against the pinned
-\texttt{formal-conjectures} predicate.
+\texttt{formal-conjectures} predicate. The $10^7$ and $10^8$ rungs are
+enforced in continuous integration and reproduced from source on two
+further machines; the $10^9$ rung was kernel-checked once, as detailed
+in Section~\ref{sec:validation}.
 
 Cited, computational, outside any kernel: no solution in
 $(24, 10^{12}]$ (Id\'en \cite{iden}); no solution in $(24,\,

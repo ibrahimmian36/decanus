@@ -21,7 +21,11 @@ end to end by a proof kernel.
         ∀ n : ℕ, 24 < n → n ≤ 100000000 →
           ¬ (⨆ m : Fin n, ↑m + σ 0 m ≤ n + 2)
 
-Both compile in Lean 4.30.0 / mathlib v4.30.0 with axioms exactly
+    theorem Erdos647.erdos647_no_solution_upto_1e9 :
+        ∀ n : ℕ, 24 < n → n ≤ 1000000000 →
+          ¬ (⨆ m : Fin n, ↑m + σ 0 m ≤ n + 2)
+
+The first two compile in Lean 4.30.0 / mathlib v4.30.0 with axioms exactly
 `{propext, Classical.choice, Quot.sound}`: no `sorry`, no `native_decide`,
 no extra axioms, enforced by a two-layer gate (`scripts/axiom_gate.sh`, run
 in CI on every push). The inner predicate is carried from
@@ -29,7 +33,11 @@ google-deepmind/formal-conjectures (`FormalConjectures/ErdosProblems/647.lean`,
 commit `c252a41`, pinned; a copy of the upstream file is kept in
 `docs/upstream_647_c252a41.lean`), identical up to one coercion the
 elaborator inserts either way, so the theorems speak the upstream
-statement's vocabulary.
+statement's vocabulary. The 10^9 rung's certificate (6,685,922
+witnesses, ~260 MB of source) is past what a repository should carry: it
+ships as a release asset, kernel-checked under the same axiom closure;
+see [docs/RUNG_1E9.md](docs/RUNG_1E9.md) for its provenance and exact
+trust status.
 
 ## Two tiers, stated plainly
 
@@ -47,7 +55,7 @@ uncertified computations exist and are cited deliberately:
 - To about 9.174 x 10^18: bentrd's C extension of Hughes's frontier scan
   ([erdos647-frontier-extension](https://github.com/bentrd/erdos647-frontier-extension)).
 
-What this repository adds is that every step below 10^8 — the divisor
+What this repository adds is that every step below 10^9 — the divisor
 bound of every witness, the primality of every listed factor, and the
 gapless concatenation of the kill intervals — is checked by the Lean
 kernel rather than trusted contributor code, native-compiled evaluation,
@@ -59,8 +67,9 @@ A *kill witness* for n is an m < n with m + τ(m) ≥ n + 3: one witness
 rules out every n in [m+1, m+τ(m)−3]. The certificate is a greedy chain
 of such witnesses (greedy is optimal for interval covering) whose kill
 intervals concatenate without gap: 123,323 witnesses covering (24, 10^7]
-(`Erdos647/Certs/`, 31 chunks) and 891,554 covering (24, 10^8]
-(`Erdos647/Certs8/`, 223 chunks). Each chunk is a single Bool equality
+(`Erdos647/Certs/`, 31 chunks), 891,554 covering (24, 10^8]
+(`Erdos647/Certs8/`, 223 chunks), and 6,685,922 covering (24, 10^9]
+(release asset, 1,672 chunks). Each chunk is a single Bool equality
 over the chain checker `chainOk`, evaluated by `decide`.
 
 A witness stores the maximal power of each prime below 1024 dividing m.
@@ -72,9 +81,9 @@ divisions (32² = 1024), so no large-prime certificates appear anywhere.
 Soundness lemmas are in `Erdos647/TauLower.lean` and `Erdos647/Chain.lean`;
 the bridge to the upstream statement is `Erdos647/Bridge.lean`.
 
-A third rung at 10^9 would need roughly 260 MB of certificate source,
-which is past what a repository should carry; the ceiling is file size
-and kernel time, not mathematics.
+A fourth rung at 10^10 would need roughly 45 million witnesses and
+close to 2 GB of certificate source; the ceiling is file size and
+kernel time, not mathematics.
 
 ## Verifying it yourself
 
@@ -106,6 +115,9 @@ witness by trial division):
     python3 scripts/gen_chain.py 1e8 data/chain_1e8.jsonl
     python3 scripts/verify_chain.py data/chain_1e8.jsonl 1e8
     python3 scripts/emit_lean.py data/chain_1e8.jsonl 1e8 Erdos647/Certs8 4000 1e8
+    python3 scripts/gen_chain.py 1e9 data/chain_1e9.jsonl
+    python3 scripts/verify_chain.py data/chain_1e9.jsonl 1e9
+    python3 scripts/emit_lean.py data/chain_1e9.jsonl 1e9 Erdos647/Certs9 4000 1e9
 
     python3 scripts/cross_check.py
 
@@ -128,7 +140,8 @@ cases), and spot-checks n + τ(n) against OEIS
     Erdos647/AxiomCheck.lean curated #print axioms manifest
     Erdos647/AxiomAudit.lean mechanical whole-library axiom audit
     scripts/                 generator, verifier, cross-check, gate
-    docs/                    pinned upstream copy, drafts
+    docs/                    pinned upstream copy, verification records,
+                             the 10^9 rung's provenance, drafts
 
 ## Context and credit
 

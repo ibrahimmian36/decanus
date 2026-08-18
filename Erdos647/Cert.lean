@@ -36,6 +36,9 @@ import Erdos647.Certs.Chunk0029
 import Erdos647.Certs.Chunk0030
 import Erdos647.Chain
 
+set_option maxRecDepth 1000000
+set_option maxHeartbeats 0
+
 /-! Generated driver: composes the chunk certificates into the
 rung theorem covering (24, 10000000]. Do not edit by hand. -/
 
