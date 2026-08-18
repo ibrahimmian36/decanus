@@ -357,12 +357,11 @@ domination argument can be settled by a kernel rather than asserted.
 
 \section{Precise claims}\label{sec:claims}
 
-Certified, in Lean 4.30.0 / mathlib v4.30.0, with axiom closure
-exactly \{\lean{propext}, \lean{Classical.choice},
-\lean{Quot.sound}\} \cite{decanus}: no $n$ with $24 < n \le 10^7$,
-$10^8$, or $10^9$
-satisfies the problem's inequality, stated against the pinned
-\texttt{formal-conjectures} predicate. The $10^7$ and $10^8$ rungs are
+Certified, in Lean 4.30.0 / mathlib v4.30.0 \cite{decanus}: no $n$
+with $24 < n \le 10^7$, $10^8$, or $10^9$ satisfies the problem's
+inequality, stated against the pinned \texttt{formal-conjectures}
+predicate, with axiom closure exactly \{\lean{propext},
+\lean{Classical.choice}, \lean{Quot.sound}\}. The $10^7$ and $10^8$ rungs are
 enforced in continuous integration and reproduced from source on two
 further machines; the $10^9$ rung was kernel-checked once, as detailed
 in Section~\ref{sec:validation}.
