@@ -1,26 +1,23 @@
-\documentclass[11pt]{amsart}
-\usepackage[margin=1.2in]{geometry}
-\usepackage{amsmath,amssymb}
-\usepackage{booktabs}
-\usepackage[hidelinks]{hyperref}
-\usepackage{url}
+\documentclass[11pt]{article}
 
-\newtheorem{theorem}{Theorem}
+\usepackage[margin=1.2in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 
 \newcommand{\tdiv}{\tau}
-\newcommand{\Nat}{\mathbb{N}}
+\newcommand{\lean}[1]{\texttt{#1}}
 
-\title{A kernel-checked exclusion certificate for Erd\H{o}s problem 647}
-
-\author{Ibby Mian}
-\author{Shayaan Siddique}
-\address{Millennium Research}
-\email{ibrahimnmian@gmail.com}
-
+\title{A kernel-checked exclusion certificate\\ for Erd\H{o}s problem 647}
+\author{Ibby Mian \and Shayaan Siddique\\[2pt]
+\normalsize Millennium Research}
 \date{August 2026}
 
 \begin{document}
+\maketitle
 
 \begin{abstract}
 Erd\H{o}s problem 647 asks whether any $n > 24$ satisfies
@@ -40,8 +37,6 @@ gap in a withdrawn January 2026 claim on this problem. Our range is three
 to ten orders of magnitude below the computational frontiers we cite; the
 contribution is the trust base, not the range.
 \end{abstract}
-
-\maketitle
 
 \section{The problem and its status}
 
@@ -119,8 +114,9 @@ $\max_{m<n}(m + \tdiv(m)) \le n + 2$.
 Theorem~\ref{thm:main} is proved in Lean~4 \cite{lean4} against
 mathlib \cite{mathlib}, in the repository \texttt{decanus}
 \cite{decanus}. The axiom closure of the final theorem, reported by
-\verb|#print axioms| and enforced in continuous integration by a
-two-layer gate, is exactly the three standard axioms
+\verb|#print axioms| --- and, for the repository rungs, enforced in
+continuous integration by a two-layer gate --- is exactly the three
+standard axioms
 $\{\mathtt{propext}, \mathtt{Classical.choice}, \mathtt{Quot.sound}\}$:
 no \texttt{sorry}, no \texttt{native\_decide}, no problem-specific
 axiom, no external solver or compiled evaluator in the trusted base.
@@ -160,7 +156,7 @@ intervals concatenate without gaps excludes an entire range. The
 certificate for Theorem~\ref{thm:main} is such a chain: witnesses
 $m_1, m_2, \ldots$ with associated certified bounds $t_i \le \tdiv(m_i)$,
 each interval $[m_i + 1,\, m_i + t_i - 3]$ beginning no later than the
-previous one ends, jointly covering $(24, 10^8]$.
+previous one ends, jointly covering $(24, 10^9]$.
 
 Two design choices make the chain cheap for a kernel to check.
 
@@ -262,9 +258,9 @@ walks every theorem of every module of the development in the compiled
 environment --- $579$ of them --- recomputes each axiom closure, and
 fails to compile if anything exceeds the three standard axioms, if any
 \texttt{sorry} survives, or if any native-code axiom appears.
-Continuous integration runs both layers on every push. The two-rung
-build compiles in Lean 4.30.0 against mathlib v4.30.0 in about three
-CPU-hours.
+Continuous integration runs both layers on every push. The repository
+build (the $10^7$ and $10^8$ rungs) compiles in Lean 4.30.0 against
+mathlib v4.30.0 in about three CPU-hours.
 
 \section{Generation and cross-validation}\label{sec:validation}
 
@@ -275,7 +271,7 @@ whose smooth part falls short of the number --- exactly the entries
 whose certified bound doubles. A greedy walk over the running maximum
 emits the witness ledger in an append-only JSONL file whose header and
 footer record the exact covered interval. Generation of the $10^8$
-chain takes about a minute.
+chain takes about a minute, and of the $10^9$ chain about five.
 
 Because the generator is the one component a kernel cannot vouch for,
 it is not trusted. A second implementation, sharing no code with the
@@ -298,8 +294,8 @@ Beyond the kernel replay that every build performs, we re-checked the
 compiled development with the standalone checker
 \texttt{lean4checker} \cite{lean4checker}, which re-typechecks the
 compiled environment outside the elaborator. All $261$ compiled modules
-of the development --- the soundness layer, both certificate rungs, and
-the generated drivers --- replay without error; the two axiom-gate
+of the development --- the soundness layer, the two repository rungs,
+and the generated drivers --- replay without error; the two axiom-gate
 script files elaborate at gate time and produce no compiled artifact to
 replay.
 Following the protocol of our Erd\H{o}s 486 audit \cite{pilus}, we then ran two
@@ -345,7 +341,7 @@ structure rather than length: certifying Hughes's modular reduction
 under the same axiom discipline would replace per-$n$ witnesses by
 per-residue-class arguments, and the frontier search cells themselves
 have exactly the shape of our witnesses. The two artifacts are
-complementary today --- his reach with a mixed trust base, our trust
+complementary today --- that reach with a mixed trust base, our trust
 base on a short range --- and composing them is the natural next step,
 though replacing \texttt{native\_decide} throughout a development of
 that size is a project in its own right.
@@ -361,9 +357,10 @@ domination argument can be settled by a kernel rather than asserted.
 
 \section{Precise claims}\label{sec:claims}
 
-Certified, in Lean 4.30.0 / mathlib v4.30.0, axiom closure exactly
-$\{\mathtt{propext}, \mathtt{Classical.choice}, \mathtt{Quot.sound}\}$
-\cite{decanus}: no $n$ with $24 < n \le 10^7$, $10^8$, or $10^9$
+Certified, in Lean 4.30.0 / mathlib v4.30.0, with axiom closure
+exactly $\{\mathtt{propext},\ \mathtt{Classical.choice},\
+\mathtt{Quot.sound}\}$ \cite{decanus}: no $n$ with $24 < n \le 10^7$,
+$10^8$, or $10^9$
 satisfies the problem's inequality, stated against the pinned
 \texttt{formal-conjectures} predicate. The $10^7$ and $10^8$ rungs are
 enforced in continuous integration and reproduced from source on two
@@ -381,11 +378,15 @@ We claim nothing else. The structural mathematics of the problem
 belongs to the discussion-thread authors cited above; the search
 frontier belongs to Id\'en, Hughes, and bentrd.
 
-\subsection*{Acknowledgements}
-Claude (Anthropic) was used throughout the development of the Lean
-proofs, the generation pipeline, and this note. Every result is
-kernel-checked, and the pipeline is cross-verified by the independent
-implementations of Section~\ref{sec:validation}.
+\subsection*{Acknowledgments}
+
+The formalization, the generation pipeline, and this note were developed
+with substantial assistance from Claude (Anthropic); all results were
+verified by the Lean kernel and cross-checked as described in
+Section~\ref{sec:validation}. We thank the contributors to the
+problem's discussion thread --- Sayan Dutta, Boris Alexeev, Kenta
+Kitamura, and Scott Hughes --- and Patrik Id\'en, whose computations
+set the standard a verified counterpart should be measured against.
 
 \begin{thebibliography}{99}
 
@@ -404,7 +405,7 @@ T.~F.~Bloom,
 \emph{Erd\H{o}s Problem \#647},
 \url{https://www.erdosproblems.com/647}, and the associated discussion
 thread, \url{https://www.erdosproblems.com/forum/discuss/647}.
-Accessed 17 August 2026.
+Accessed 18 August 2026.
 
 \bibitem{oeisA087280}
 OEIS Foundation Inc.,
@@ -462,12 +463,14 @@ resolution of Erd\H{o}s problem 486},
 \bibitem{lean4}
 L.~de~Moura and S.~Ullrich,
 \emph{The Lean 4 theorem prover and programming language},
-CADE 28, Springer, 2021, 625--635.
+Automated Deduction -- CADE 28, Lecture Notes in Computer Science,
+vol.~12699, Springer, 2021, pp.~625--635.
 
 \bibitem{mathlib}
 The mathlib Community,
 \emph{The Lean mathematical library},
-CPP 2020, ACM, 2020, 367--381.
+Proceedings of the 9th ACM SIGPLAN International Conference on Certified
+Programs and Proofs (CPP 2020), 2020, pp.~367--381.
 
 \bibitem{lean4checker}
 The Lean prover community,
