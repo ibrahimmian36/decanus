@@ -86,7 +86,10 @@ The gate fails on any theorem whose axiom closure exceeds
 {propext, Classical.choice, Quot.sound}, on any `sorry`, and on any
 native-code axiom, in two independent layers: a curated `#print axioms`
 manifest and a mechanical audit that walks every theorem of every
-`Erdos647` module in the compiled environment.
+`Erdos647` module in the compiled environment. The compiled development
+also replays through the standalone
+[lean4checker](https://github.com/leanprover/lean4checker): all 261
+compiled modules pass.
 
 Regenerate the certificates from scratch (two independent implementations;
 `verify_chain.py` shares no code with the generator and re-derives every

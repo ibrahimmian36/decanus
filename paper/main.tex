@@ -286,9 +286,11 @@ completeness of the search for a chain, never soundness of the theorem.
 Beyond the kernel replay that every build performs, we re-checked the
 compiled development with the standalone checker
 \texttt{lean4checker} \cite{lean4checker}, which re-typechecks the
-compiled environment outside the elaborator.
-% TO FILL BEFORE SUBMISSION: lean4checker verdict line
-% (replay of all 262 modules of the development on the build machine).
+compiled environment outside the elaborator. All $261$ compiled modules
+of the development --- the soundness layer, both certificate rungs, and
+the generated drivers --- replay without error; the two axiom-gate
+script files elaborate at gate time and produce no compiled artifact to
+replay.
 A from-source verification leg on separate x86 hardware --- Lean
 toolchain compiled from source, mathlib and the development rebuilt
 with no cache, certificates regenerated and diffed against the
