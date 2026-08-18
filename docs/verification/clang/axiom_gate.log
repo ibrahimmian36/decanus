@@ -1,0 +1,17 @@
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+'Erdos647.isPrimeSmall_sound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos647.card_divisors_smoothVal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos647.card_divisors_le_of_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos647.witness_tau' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos647.chain_sound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos647.killed_upto' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos647.killed_upto_1e8' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos647.not_sup_le_of_killed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos647.bounded_exclusion' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos647.erdos647_no_solution_upto' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos647.erdos647_no_solution_upto_1e8' depends on axioms: [propext, Classical.choice, Quot.sound]
+note: using toolchain 'lean-src' from override set on '/root/decanus_audit/decanus'
+note: to remove: elan override unset --path '/root/decanus_audit/decanus' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1
+AXIOM AUDIT: PASS: 579 theorems across all Erdos647 modules, axioms within [propext, Classical.choice, Quot.sound]
+AXIOM GATE: PASS (11 published theorems in the manifest, 579 audited library-wide, axioms ⊆ {propext, Classical.choice, Quot.sound})

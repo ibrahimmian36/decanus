@@ -89,7 +89,12 @@ manifest and a mechanical audit that walks every theorem of every
 `Erdos647` module in the compiled environment. The compiled development
 also replays through the standalone
 [lean4checker](https://github.com/leanprover/lean4checker): all 261
-compiled modules pass.
+compiled modules pass. Two from-source legs on separate x86 hardware
+(`pods/pod_build.sh`, gcc and clang toolchains built from source, no
+cache) reproduce the committed certificates byte for byte, pass the
+gate with identical counts, replay through lean4checker, and yield
+olean digests identical to the build machine's; manifests and digests
+are in `docs/verification/`.
 
 Regenerate the certificates from scratch (two independent implementations;
 `verify_chain.py` shares no code with the generator and re-derives every

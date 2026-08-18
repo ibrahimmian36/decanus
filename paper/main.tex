@@ -291,12 +291,21 @@ of the development --- the soundness layer, both certificate rungs, and
 the generated drivers --- replay without error; the two axiom-gate
 script files elaborate at gate time and produce no compiled artifact to
 replay.
-A from-source verification leg on separate x86 hardware --- Lean
-toolchain compiled from source, mathlib and the development rebuilt
-with no cache, certificates regenerated and diffed against the
-committed files, gate re-run, environment re-checked ---
-% TO FILL BEFORE SUBMISSION: pod leg results and olean digest comparison.
-follows the protocol of our Erd\H{o}s 486 audit.
+Following the protocol of our Erd\H{o}s 486 audit, we then ran two
+from-source verification legs on separate x86 hardware, one with the
+Lean toolchain compiled from source by gcc and one by clang. In each
+leg, mathlib and the development were rebuilt with no cache under the
+source-built toolchain; the certificate pipeline was re-run from
+scratch on that machine and its output diffed against the committed
+chunk files, which it reproduces byte for byte; the axiom gate passed
+with the same counts; and \texttt{lean4checker} replayed every package
+of the environment without error (the \texttt{Cli} package, which the
+minimal build does not compile, was built explicitly and then replays
+cleanly as well; \texttt{lean4lean} publishes no branch for this
+toolchain and was skipped). Finally, the SHA-256 digests of all $262$
+compiled modules of the development agree across all three builds ---
+the ARM build machine and both x86 from-source legs, gcc and clang ---
+so the three toolchains produced bit-identical compiled artifacts.
 
 \section{Limits and prospects}\label{sec:limits}
 
