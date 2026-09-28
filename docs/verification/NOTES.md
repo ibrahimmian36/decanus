@@ -9,8 +9,8 @@ to the committed files; the axiom gate re-run; lean4checker run over the
 environment (see below); olean digests recorded.
 
 The legs checked out commit adf6670, which is not in this repository's
-history; its scripts are those of tag `v1.0.0` except the author line of
-the header template in `scripts/emit_lean.py`, so the script now names tag
+history; its scripts are those of tag `v1.0.0` except the author lines of
+the two header templates in `scripts/emit_lean.py`, so the script now names tag
 `v1.0.0`.
 
 lean4checker and the `Cli` package:
