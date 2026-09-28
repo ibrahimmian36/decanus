@@ -178,8 +178,9 @@ Millennium Research: Ibrahim Mian, Shayaan Siddique.
 
 The history of this repository was rewritten to correct author names, so
 the commits behind the tags changed. Only author-name lines (file-header
-author lines, the LICENSE and CITATION.cff names, and the paper's author
-line) differ between the old and new commits.
+author lines, the header template in `scripts/emit_lean.py`, the README
+author line, the LICENSE and CITATION.cff names, and, at `v1.1.0`, the
+paper's author line) differ between the old and new commits.
 
 | Tag      | Old commit | New commit |
 |----------|------------|------------|
