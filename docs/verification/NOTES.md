@@ -5,11 +5,13 @@ the Lean toolchain compiled by gcc (`gcc/`) and one by clang (`clang/`).
 Each leg's `MANIFEST.txt` records the run: 2026-08-18, x86_64 Linux,
 96 cores; toolchain built from source; mathlib and the development
 rebuilt with no cache; certificates regenerated and found byte-identical
-to the committed files; the axiom gate re-run; the environment replayed
-with lean4checker; olean digests recorded.
+to the committed files; the axiom gate re-run; lean4checker run over the
+environment (see below); olean digests recorded.
 
 The legs checked out commit adf6670, which is not in this repository's
-history; the script now names tag `v1.0.0`.
+history; its scripts are those of tag `v1.0.0` except the author line of
+the header template in `scripts/emit_lean.py`, so the script now names tag
+`v1.0.0`.
 
 lean4checker and the `Cli` package:
 
