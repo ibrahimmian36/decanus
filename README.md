@@ -174,6 +174,19 @@ Companion repositories: [centurion](https://github.com/ibrahimmian36/centurion)
 
 Millennium Research: Ibrahim Mian, Shayaan Siddique.
 
+## Tags cited by the paper
+
+The history of this repository was rewritten to correct author names, so
+the commits behind the tags changed. Only author-name lines (file-header
+author lines, the LICENSE and CITATION.cff names, and the paper's author
+line) differ between the old and new commits.
+
+| Tag      | Old commit | New commit |
+|----------|------------|------------|
+| `v1.0.0` | `c20e3a6`  | `37f0a9e`  |
+| `v1.1.0` | `e4dd2fe`  | `a007675`  |
+| `v1.1.1` | `9da8336`  | `a665053`  |
+
 ## Citation
 
 If you use this work, please cite the paper:

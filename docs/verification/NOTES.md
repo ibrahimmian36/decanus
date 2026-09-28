@@ -5,12 +5,11 @@ Raw outputs of the two from-source legs (`pods/pod_build.sh`) run on
 clang leg), mathlib and the development rebuilt with no cache,
 certificates regenerated and diffed against the committed files, axiom
 gate re-run, environment replayed with lean4checker, olean digests
-recorded. The legs checked out the release now tagged `v1.0.0`. The
+recorded. The script originally pinned the checkout by commit hash. The
 repository history was later rewritten to correct author metadata, so
-the commit hash the script originally pinned no longer exists; the
-tagged tree differs from it only in the author line of file headers (a
-comment, which leaves every compiled module unchanged) and in three
-draft documents no longer kept in the repository.
+that hash no longer exists; the build script now names tag `v1.0.0`.
+The chunk files in the 10^9 release asset differ from regenerated ones
+only in the header comment line (see `docs/RUNG_1E9.md`).
 
 Two manifest lines need context:
 
