@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this repository, please cite it as below."
+message: "If you use this work, please cite the paper below."
 title: "Decanus: a kernel-checked exclusion certificate for Erdős problem 647"
 authors:
   - family-names: "Mian"
@@ -9,8 +9,26 @@ authors:
 type: software
 repository-code: "https://github.com/ibrahimmian36/decanus"
 license: Apache-2.0
+doi: "10.5281/zenodo.21996019"
 keywords:
   - "Erdős problems"
   - "Lean 4"
   - "formal verification"
   - "number theory"
+preferred-citation:
+  type: article
+  title: "A Kernel-Checked Exclusion Certificate for Erdős Problem 647"
+  authors:
+    - family-names: "Mian"
+      given-names: "Ibrahim"
+    - family-names: "Siddique"
+      given-names: "Shayaan"
+  doi: "10.48550/arXiv.2608.17880"
+  year: 2026
+  month: 8
+  identifiers:
+    - type: other
+      value: "arXiv:2608.17880"
+      description: "arXiv identifier"
+  url: "https://arxiv.org/abs/2608.17880"
+  repository-code: "https://github.com/ibrahimmian36/decanus"

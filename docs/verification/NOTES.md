@@ -5,7 +5,12 @@ Raw outputs of the two from-source legs (`pods/pod_build.sh`) run on
 clang leg), mathlib and the development rebuilt with no cache,
 certificates regenerated and diffed against the committed files, axiom
 gate re-run, environment replayed with lean4checker, olean digests
-recorded.
+recorded. The legs checked out the release now tagged `v1.0.0`. The
+repository history was later rewritten to correct author metadata, so
+the commit hash the script originally pinned no longer exists; the
+tagged tree differs from it only in the author line of file headers (a
+comment, which leaves every compiled module unchanged) and in three
+draft documents no longer kept in the repository.
 
 Two manifest lines need context:
 

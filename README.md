@@ -3,6 +3,7 @@
 [![axiom gate](https://github.com/ibrahimmian36/decanus/actions/workflows/ci.yml/badge.svg)](https://github.com/ibrahimmian36/decanus/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![axioms](https://img.shields.io/badge/axioms-propext%20%7C%20Classical.choice%20%7C%20Quot.sound-success)](#the-certified-results)
+[![arXiv](https://img.shields.io/badge/arXiv-2608.17880-b31b1b.svg)](https://arxiv.org/abs/2608.17880)
 
 Kernel-certified verification for Erdős problem 647: with τ(m) the number
 of divisors of m, is there some n > 24 with max_{m<n}(m + τ(m)) ≤ n + 2?
@@ -10,6 +11,12 @@ The condition holds at n = 24, and Erdős offered £25 for any larger
 example. The problem is open. This repository does not solve it. What it
 contains is the first verification at any finite bound that is checked
 end to end by a proof kernel.
+
+Paper: Ibrahim Mian and Shayaan Siddique, *A Kernel-Checked Exclusion
+Certificate for Erdős Problem 647*,
+[arXiv:2608.17880](https://arxiv.org/abs/2608.17880). Source, certificate
+data, and verification artifacts are archived at
+[doi:10.5281/zenodo.21996019](https://doi.org/10.5281/zenodo.21996019).
 
 ## The certified results
 
@@ -141,7 +148,9 @@ cases), and spot-checks n + τ(n) against OEIS
     Erdos647/AxiomAudit.lean mechanical whole-library axiom audit
     scripts/                 generator, verifier, cross-check, gate
     docs/                    pinned upstream copy, verification records,
-                             the 10^9 rung's provenance, drafts
+                             the 10^9 rung's provenance
+    pods/pod_build.sh        from-source verification leg
+    paper/main.tex           source of the arXiv paper
 
 ## Context and credit
 
@@ -164,6 +173,22 @@ Companion repositories: [centurion](https://github.com/ibrahimmian36/centurion)
 [Pilus](https://github.com/ibrahimmian36/Pilus) (Erdős #486).
 
 Millennium Research: Ibrahim Mian, Shayaan Siddique.
+
+## Citation
+
+If you use this work, please cite the paper:
+
+    @misc{mian2026erdos647,
+      title         = {A Kernel-Checked Exclusion Certificate for {Erd\H{o}s} Problem 647},
+      author        = {Mian, Ibrahim and Siddique, Shayaan},
+      year          = {2026},
+      eprint        = {2608.17880},
+      archivePrefix = {arXiv},
+      url           = {https://arxiv.org/abs/2608.17880}
+    }
+
+GitHub's "Cite this repository" button reads the same data from
+`CITATION.cff`.
 
 ## License
 

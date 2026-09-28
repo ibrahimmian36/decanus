@@ -13,7 +13,7 @@ export GIT_TERMINAL_PROMPT=0
 COMPILER="${COMPILER:-gcc}"                 # gcc | clang
 WALL_CAP="${WALL_CAP:-57600}"               # 16h hard cap (32 vCPU sizing)
 SMOKE="${SMOKE:-0}"                          # SMOKE=1: cheap preflight only
-DECANUS_COMMIT=adf6670aac5fbbed89440c09d5ed9e008ed8a54b
+DECANUS_COMMIT=v1.0.0                       # release tag; see docs/verification/NOTES.md
 MATHLIB_REV=c5ea00351c28e24afc9f0f84379aa41082b1188f
 LEAN_TAG=v4.30.0
 L4C_COMMIT=91a7f0e8e9dffe927089f5a6edcfeeb8a0e07709   # master; no v4.30.0 tag

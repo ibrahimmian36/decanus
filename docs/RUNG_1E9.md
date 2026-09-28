@@ -15,8 +15,7 @@ as a release asset rather than in git.
 
 ## Provenance
 
-Generated and verified on 2026-08-18 from the scripts at commit adf6670
-(tag v1.0.0):
+Generated and verified on 2026-08-18 from the scripts at tag v1.0.0:
 
 - `gen_chain.py 1e9` produced the chain in 300.7 s (footer: 6,685,922
   witnesses, final cover 1,000,000,021, exhausted [25, 10^9]);
@@ -59,3 +58,7 @@ Release asset `results_1e9_experiment.tar.gz`
 (sha256 c2d6ddc08ea7c242c35ce35ffecc712caf6f4d21afd0fdb9015b86533c884bcb):
 `Erdos647/Certs9/` (1,672 chunk files), `Erdos647/Cert1E9.lean`,
 `Erdos647/Headline9.lean`, and the generation and build logs.
+The chunk files in the asset predate a one-line change to the author line
+of the generated file header; regenerating with the current
+`scripts/emit_lean.py` reproduces them except for that comment line,
+which does not affect the compiled modules.
